@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SignalClean.Api/SignalClean.Api.csproj" />
+    <Project Path="src/SignalClean.Client/SignalClean.Client.csproj" />
+    <Project Path="src/SignalClean.Core/SignalClean.Core.csproj" />
+    <Project Path="src/SignalClean.Data/SignalClean.Data.csproj" />
+    <Project Path="src/SignalClean.Simulator/SignalClean.Simulator.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SignalClean.Api.Tests/SignalClean.Api.Tests.csproj" />
+    <Project Path="tests/SignalClean.Core.Tests/SignalClean.Core.Tests.csproj" />
+  </Folder>
+</Solution>
