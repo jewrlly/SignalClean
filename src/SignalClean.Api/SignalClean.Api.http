@@ -1,0 +1,38 @@
+# Ручна перевірка API (VS Code: розширення REST Client; Visual Studio: вбудовано)
+@host = http://localhost:5080
+@key = dev-key-change-me
+
+GET {{host}}/health
+
+###
+GET {{host}}/api/sensors
+
+###
+GET {{host}}/api/sensors/TEMP-01/readings?limit=20
+
+###
+GET {{host}}/api/sensors/TEMP-01/quality
+
+###
+GET {{host}}/api/sensors/TEMP-01/anomalies
+
+###
+POST {{host}}/api/readings
+Content-Type: application/json
+X-Api-Key: {{key}}
+
+{
+  "readings": [
+    { "sensorCode": "TEMP-01", "timestamp": "2026-11-21T10:00:00Z", "value": 22.4 },
+    { "sensorCode": "TEMP-01", "timestamp": "2026-11-21T10:00:01Z", "value": null },
+    { "sensorCode": "TEMP-01", "timestamp": "2026-11-21T10:00:02Z", "value": -999 },
+    { "sensorCode": "UNKNOWN", "timestamp": "2026-11-21T10:00:02Z", "value": 1 }
+  ]
+}
+
+###
+POST {{host}}/api/sensors
+Content-Type: application/json
+X-Api-Key: {{key}}
+
+{ "code": "TEMP-02", "name": "Температура, серверна", "typeName": "Temperature", "location": "Корпус 1, 005" }
