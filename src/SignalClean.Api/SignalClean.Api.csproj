@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>SignalClean.Api</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SignalClean.Core\SignalClean.Core.csproj" />
+    <ProjectReference Include="..\SignalClean.Data\SignalClean.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="SignalClean.Api.Tests" />
+  </ItemGroup>
+
+</Project>
