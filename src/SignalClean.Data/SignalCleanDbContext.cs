@@ -41,7 +41,8 @@ public class SignalCleanDbContext(DbContextOptions<SignalCleanDbContext> options
 
         modelBuilder.Entity<Reading>(e =>
         {
-            e.ToTable("Readings");
+            e.ToTable("Readings", t => t.HasCheckConstraint(
+                "CK_Readings_Status", "\"Status\" IN ('Valid', 'Corrected', 'Invalid', 'Missing')"));
             e.Property(x => x.Status).HasConversion<string>().HasMaxLength(16);
 
             // Найчастіший запит: «останні N вимірювань датчика».
