@@ -13,12 +13,13 @@ public sealed class ApiClient : IDisposable
         NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
     };
 
+    private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(5); 
     private readonly HttpClient _http;
     private Uri _baseUri = new("http://localhost:5080/");
 
     public ApiClient(HttpClient? http = null)
     {
-        _http = http ?? new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+        _http = http ?? new HttpClient { Timeout = DefaultTimeout };
     }
 
     /// <summary>Перевіряє та встановлює адресу API. Повертає false, якщо адреса некоректна.</summary>
