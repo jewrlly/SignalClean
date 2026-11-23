@@ -37,6 +37,9 @@ public sealed class SignalProcessor
         _options = options ?? ProcessingOptions.Default;
         ArgumentOutOfRangeException.ThrowIfLessThan(_options.Window, 3);
         ArgumentOutOfRangeException.ThrowIfLessThan(_options.StuckRun, 2);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(_options.SpikeSigma);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(_options.GapFactor);
+        ArgumentOutOfRangeException.ThrowIfNegative(_options.MinSpikeFraction);
     }
 
     public IReadOnlyList<ProcessedPoint> Process(
