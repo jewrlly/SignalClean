@@ -1,0 +1,136 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:SignalClean.Client.Controls"
+        x:Class="SignalClean.Client.MainWindow"
+        Title="SignalClean — якість сенсорних даних"
+        Width="1200" Height="760" MinWidth="900" MinHeight="600">
+
+  <DockPanel>
+
+    <!-- Верхня панель: адреса API, оновлення, статус -->
+    <Border DockPanel.Dock="Top" Background="#263238" Padding="12,8">
+      <Grid ColumnDefinitions="Auto,320,Auto,Auto,*">
+        <TextBlock Grid.Column="0" Text="SignalClean" Foreground="White" FontSize="18" FontWeight="SemiBold"
+                   VerticalAlignment="Center" Margin="0,0,24,0" />
+        <TextBox Grid.Column="1" Text="{Binding ApiUrl}" Watermark="http://localhost:5080" />
+        <Button Grid.Column="2" Content="Оновити" Command="{Binding RefreshCommand}" Margin="8,0,0,0" />
+        <CheckBox Grid.Column="3" Content="Автооновлення" IsChecked="{Binding AutoRefresh}"
+                  Foreground="White" Margin="12,0,0,0" />
+        <TextBlock Grid.Column="4" Text="{Binding Status}" Foreground="#B0BEC5" VerticalAlignment="Center"
+                   HorizontalAlignment="Right" TextTrimming="CharacterEllipsis" Margin="12,0,0,0" />
+      </Grid>
+    </Border>
+
+    <!-- Ліва панель: список датчиків -->
+    <Border DockPanel.Dock="Left" Width="300" BorderBrush="#E0E0E0" BorderThickness="0,0,1,0">
+      <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="Датчики" FontWeight="SemiBold" Margin="12,12,12,4" />
+        <ListBox ItemsSource="{Binding Sensors}" SelectedItem="{Binding SelectedSensor}">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <Grid ColumnDefinitions="*,Auto" Margin="4">
+                <StackPanel Grid.Column="0">
+                  <TextBlock Text="{Binding Code}" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding Name}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                  <TextBlock Text="{Binding TypeAndLocation}" FontSize="11" Foreground="#757575"
+                             TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+                <Border Grid.Column="1" Background="{Binding GradeBrush}" CornerRadius="6"
+                        Padding="8,4" VerticalAlignment="Center" MinWidth="52">
+                  <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="{Binding Grade}" Foreground="White" FontWeight="Bold"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="{Binding ScoreText}" Foreground="White" FontSize="11"
+                               HorizontalAlignment="Center" />
+                  </StackPanel>
+                </Border>
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+    </Border>
+
+    <!-- Основна частина -->
+    <Grid RowDefinitions="Auto,Auto,*,Auto,220" Margin="16">
+
+      <TextBlock Grid.Row="0" Text="{Binding SelectedTitle}" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+      <!-- Метрики якості -->
+      <UniformGrid Grid.Row="1" Columns="5" Margin="0,0,0,12">
+        <Border Background="#E3F2FD" CornerRadius="8" Padding="12" Margin="0,0,8,0">
+          <StackPanel>
+            <TextBlock Text="Індекс якості" FontSize="12" Foreground="#546E7A" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="{Binding ScoreText}" FontSize="26" FontWeight="Bold" />
+              <TextBlock Text="{Binding GradeText}" FontSize="18" VerticalAlignment="Bottom" Margin="0,0,0,3" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+        <Border Background="#F1F8E9" CornerRadius="8" Padding="12" Margin="0,0,8,0">
+          <StackPanel>
+            <TextBlock Text="Повнота" FontSize="12" Foreground="#546E7A" />
+            <TextBlock Text="{Binding CompletenessText}" FontSize="22" FontWeight="SemiBold" />
+          </StackPanel>
+        </Border>
+        <Border Background="#F1F8E9" CornerRadius="8" Padding="12" Margin="0,0,8,0">
+          <StackPanel>
+            <TextBlock Text="Достовірність" FontSize="12" Foreground="#546E7A" />
+            <TextBlock Text="{Binding ValidityText}" FontSize="22" FontWeight="SemiBold" />
+          </StackPanel>
+        </Border>
+        <Border Background="#FFF3E0" CornerRadius="8" Padding="12" Margin="0,0,8,0">
+          <StackPanel>
+            <TextBlock Text="Частка аномалій" FontSize="12" Foreground="#546E7A" />
+            <TextBlock Text="{Binding AnomalyRateText}" FontSize="22" FontWeight="SemiBold" />
+          </StackPanel>
+        </Border>
+        <Border Background="#ECEFF1" CornerRadius="8" Padding="12">
+          <StackPanel>
+            <TextBlock Text="Вибірка" FontSize="12" Foreground="#546E7A" />
+            <TextBlock Text="{Binding TotalText}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+      </UniformGrid>
+
+      <!-- Графік -->
+      <Border Grid.Row="2" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="8" ClipToBounds="True">
+        <controls:SignalChart RawValues="{Binding RawSeries}"
+                              CleanValues="{Binding CleanSeries}"
+                              Flagged="{Binding FlaggedPoints}" />
+      </Border>
+
+      <!-- Легенда -->
+      <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="20" Margin="4,6,0,10">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <Rectangle Width="18" Height="2" Fill="#9E9E9E" VerticalAlignment="Center" />
+          <TextBlock Text="сирий сигнал" FontSize="12" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <Rectangle Width="18" Height="3" Fill="#1565C0" VerticalAlignment="Center" />
+          <TextBlock Text="очищений сигнал" FontSize="12" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <Ellipse Width="8" Height="8" Fill="#D32F2F" VerticalAlignment="Center" />
+          <TextBlock Text="виправлено / відкинуто" FontSize="12" />
+        </StackPanel>
+      </StackPanel>
+
+      <!-- Журнал аномалій -->
+      <DockPanel Grid.Row="4">
+        <TextBlock DockPanel.Dock="Top" Text="Останні аномалії" FontWeight="SemiBold" Margin="0,0,0,4" />
+        <ListBox ItemsSource="{Binding Anomalies}">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <Grid ColumnDefinitions="90,120,*">
+                <TextBlock Grid.Column="0" Text="{Binding Timestamp, StringFormat='{}{0:HH:mm:ss}'}" FontSize="12" />
+                <TextBlock Grid.Column="1" Text="{Binding Kind}" FontSize="12" FontWeight="SemiBold" Foreground="#C62828" />
+                <TextBlock Grid.Column="2" Text="{Binding Details}" FontSize="12" TextTrimming="CharacterEllipsis" />
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+    </Grid>
+  </DockPanel>
+</Window>
