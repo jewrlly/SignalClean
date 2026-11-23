@@ -21,6 +21,11 @@ public static class ReadingValidator
 
     public static ValidationOutcome Validate(double? value, DateTimeOffset timestamp, double minValid, double maxValid, DateTimeOffset now)
     {
+        if (!double.IsFinite(minValid) || !double.IsFinite(maxValid))
+        {
+         throw new ArgumentException("Межі діапазону мають бути скінченними числами.");
+        }
+        
         if (minValid >= maxValid)
         {
             throw new ArgumentException("Нижня межа діапазону має бути меншою за верхню.", nameof(minValid));
