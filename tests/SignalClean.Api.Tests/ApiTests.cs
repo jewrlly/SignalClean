@@ -49,6 +49,18 @@ public class ApiTests
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
+    
+    [Fact]
+    public async Task CreateSensor_WithoutApiKey_Returns401()
+    {
+        using var factory = new ApiFactory();
+        var response = await factory.CreateClient().PostAsJsonAsync(
+            "/api/sensors",
+            new CreateSensorRequest("TEMP-09", "Тест", "Temperature", null),
+            ApiFactory.Json);
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
 
     [Fact]
     public async Task Ingest_WithWrongApiKey_Returns401()
