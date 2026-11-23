@@ -85,4 +85,10 @@ public class ReadingValidatorTests
     {
         Assert.Throws<ArgumentException>(() => ReadingValidator.Validate(1, Now, 10, 10, Now));
     }
+    [Fact]
+ 
+    public void NaNRange_Throws()
+    {
+     Assert.Throws<ArgumentException>(() => ReadingValidator.Validate(1, Now, double.NaN, 10, Now));
+    }
 }

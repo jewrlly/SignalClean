@@ -121,4 +121,11 @@ public class SignalProcessorTests
         Assert.Throws<ArgumentNullException>(() => _processor.Process(null!, Array.Empty<RawPoint>(), 0, 1, Now));
         Assert.Throws<ArgumentNullException>(() => _processor.Process(History(), null!, 0, 1, Now));
     }
+
+    [Fact]
+    public void NonPositiveThresholds_Throw()
+    {
+     Assert.Throws<ArgumentOutOfRangeException>(() => new SignalProcessor(new ProcessingOptions { SpikeSigma = 0 }));
+     Assert.Throws<ArgumentOutOfRangeException>(() => new SignalProcessor(new ProcessingOptions { GapFactor = -1 }));
+    }
 }
