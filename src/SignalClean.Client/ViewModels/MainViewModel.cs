@@ -99,8 +99,8 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     public bool HasSelection => SelectedSensor is not null;
 
     public string SelectedTitle => SelectedSensor is null
-        ? "Оберіть датчик зліва"
-        : $"{SelectedSensor.Code} — {SelectedSensor.Name}";
+     ? "Оберіть датчик зліва"
+     : $"{SelectedSensor.Code} — {SelectedSensor.Name} ({SelectedSensor.Unit})";
 
     public IReadOnlyList<double?> RawSeries
     {
