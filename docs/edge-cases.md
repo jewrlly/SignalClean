@@ -1,0 +1,9 @@
+# Крайні випадки та обробка помилок (C2)
+
+| № | Критерій C2 | Крайній випадок | Як оброблено | Де в коді / тест | Оброблено |
+|---|---|---|---|---|---|
+| 1 | Валідація введення | Код датчика з пробілом, порожня назва, невідомий тип, пакет понад 1000 записів | 400 ValidationProblem з описом поля | `SensorService.Validate`, `Program.cs`; `CreateSensor_Invalid_Returns400`, `Ingest_TooLargeBatch_Returns400` | так |
+| 2 | Порожні / некоректні дані | Порожній пакет, `value: null`, `NaN`, `Infinity`, −999, зіпсований JSON, вимірювання без коду датчика | Порожній пакет → 400; null → `Missing`; NaN/∞ → `Invalid` + `NotANumber`; −999 → `OutOfRange`; зіпсований JSON → 400; без коду → відхилено | `ReadingValidator`; `NonFiniteValue_IsInvalid`, `Ingest_MalformedJson_Returns400`, `Ingest_UnknownSensor_IsRejected_OthersAccepted` | так |
+| 3 | Винятки без аварійного завершення | API недоступний для симулятора / клієнта; тайм-аут; помилка БД | Симулятор і клієнт ловлять `HttpRequestException` / тайм-аут і пробують знову; у API `UseExceptionHandler` повертає 500 ProblemDetails, процес не падає; транзакція відкочується | `Simulator/Program.cs`, `MainViewModel.RefreshAsync`, `Program.cs` | так |
+| 4 | Межові значення | Значення рівно на межі діапазону (−40 / 85 °C), на 0.01 за межею; час +4 / +6 хв у майбутньому; рік 0001; `limit=0` або `limit=100000` | Межі включно; за межею → `OutOfRange`; допуск розсинхронізації 5 хв; `limit` обмежується діапазоном 1…1000; постійний сигнал (MAD = 0) не дає хибних сплесків | `BoundaryValues`, `FutureTimestamp_*`, `AncientTimestamp_IsInvalid`, `QueryService.ClampLimit`, `IsSpike_ConstantHistory_UsesAbsoluteThreshold` | так |
+| 5 | Немає необроблених винятків у лозі | Прогін: API + симулятор (з дефектами) 5 хвилин | Лог API без `Unhandled exception` | Запуск: `dotnet run --project src/SignalClean.Api > run.log 2>&1`, потім `grep -i "unhandled\|exception" run.log` | *(додати скріншот)* |
